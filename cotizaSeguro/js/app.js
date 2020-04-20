@@ -27,6 +27,8 @@ Seguro.prototype.cotizarSeguro = function(){
             break;
     }
 
+
+
     //Leer el año
     const diferencia = new Date().getFullYear() - this.anio;
     //Cada año de diferencia hay que reducir 3% el valor del seguro
@@ -46,10 +48,13 @@ Seguro.prototype.cotizarSeguro = function(){
 }
 
 
+
+
+
 //Todo lo que se muestra en interfaz
 function Interfaz(){
     //Mensaje que se imprime en el HTML
-    Interfaz.prototype.mostrarError = function(mensaje, tipo){
+    Interfaz.prototype.mostrarMensaje = function(mensaje, tipo){
         const div = document.createElement('div');
 
         if(tipo === 'error'){
@@ -65,6 +70,10 @@ function Interfaz(){
         },4000);
     }
 }
+
+
+
+
 
 //Imprime el resultado de la cotizacion
 Interfaz.prototype.mostrarResultado = function(seguro,total){
@@ -84,20 +93,28 @@ Interfaz.prototype.mostrarResultado = function(seguro,total){
     const div= document.createElement('div');
     //insertar info
     div.innerHTML = `
-       <p> Tu resumen: </p>
+       <p class="header"> Tu resumen: </p>
        <p>  Marca: ${marca} </p>
        <p> Año: ${seguro.anio}</p>
        <p> Tipo: ${seguro.tipo}</p>
        <p> Total: $ ${total}</p>
     `;
-    resultado.appendChild(div);
+    const spinner = document.querySelector('#cargando img');
+    spinner.style.display = 'block';
+    setTimeout(function(){
+        spinner.style.display = 'none';
+        resultado.appendChild(div);
+    },3000);
+    
 }
+
+
+
 
 
 
 //Event listener
 const formulario = document.getElementById('cotizar-seguro');
-
 
 
 formulario.addEventListener('submit', function(e){
@@ -119,9 +136,15 @@ formulario.addEventListener('submit', function(e){
     //Revisamos que los campos no estenn vacios
     if(marcaSeleccionada === '' || anioSeleccionado === '' || tipo === ''){
         //Interfaz imprimiendo un error
-        interfaz.mostrarError('Faltan datos, revisa el formulario e intenta de nuevo', 'error');
+        interfaz.mostrarMensaje('Faltan datos, revisa el formulario e intenta de nuevo', 'error');
         //console.log('Faltan datos');
     }else{
+        //Limpiar resultados anteriores
+        const resultados = document.querySelector('#resultado div');
+        if(resultados != null){
+            resultados.remove();
+        }
+
         //Instanciar seguro y mostrar interfaz
         const seguro = new Seguro(marcaSeleccionada, anioSeleccionado,tipo);
         //Contizar el seguro
@@ -129,6 +152,7 @@ formulario.addEventListener('submit', function(e){
 
         //Mostrar el resultado
         interfaz.mostrarResultado(seguro, cantidad);
+        interfaz.mostrarMensaje('Cotizando...', 'exito');
 
         //console.log('todo seguro')
 
@@ -143,6 +167,9 @@ formulario.addEventListener('submit', function(e){
 
     
    
+
+
+
 
 
 
